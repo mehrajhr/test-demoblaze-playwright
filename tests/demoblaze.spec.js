@@ -13,12 +13,21 @@ test('Demoblaze E2E Purchase Flow', async ({ page }) => {
   await page.fill('#sign-username', username);
   await page.fill('#sign-password', password);
   
-  // সাইন আপ পপ-আপের রেজিস্টার বাটনে ক্লিক এবং অ্যালার্ট হ্যান্ডেল করা
+  // sign up button click and handle the alert
   page.once('dialog', async dialog => {
     expect(dialog.message()).toContain('Sign up successful.');
     await dialog.accept();
   });
   await page.click('#signInModal .btn-primary');
 
+  // login process
+  await page.click('#login2');
+  await page.fill('#loginusername', username);
+  await page.fill('#loginpassword', password);
+  await page.click('#logInModal .btn-primary');
+
+  // login success validation
+  const welcomeUser = page.locator('#nameofuser');
+  await expect(welcomeUser).toHaveText(`Welcome ${username}`, { timeout: 10000 });
   
 });
